@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class OrderController extends Controller
 {
@@ -12,7 +13,21 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $orders = Order::paginate(8);
+            return response()->json(
+                [
+                    'status_code' => true,
+                    'message' => "Orders were fetched successfuly",
+                    'data' => $orders,
+                ]);
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'status_code' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
